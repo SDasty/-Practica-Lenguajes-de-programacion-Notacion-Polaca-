@@ -1,0 +1,32 @@
+import Data.List
+condNumero :: Float -> Float
+condNumero x
+  | x == 3 = 100
+  | x == 5 = 25
+  | otherwise = 0
+
+solveRPN :: String -> Float
+solveRPN = head . foldl foldingFunction [] . words
+    where   foldingFunction (x:xs) "neg1" = (x - x*2) : xs
+            foldingFunction (x:xs) "raiz2" = (sqrt x) : xs
+            foldingFunction (x:xs) "condNumero" = (condNumero x) : xs
+            foldingFunction xs "sumTotal" = [sum xs]
+            foldingFunction xs "productoTotal" = [product xs]
+            foldingFunction (x:xs) "sumProm" = (sum xs / fromIntegral(length xs) ) :xs
+            foldingFunction (x:y:ys) "+" = (x + y):ys
+            foldingFunction (x:y:ys) "-" = (y - x):ys
+            foldingFunction (x:y:ys) "/" = (y / x):ys
+            foldingFunction (x:y:ys) "*" = (y * x):ys
+            foldingFunction (x:xs) "ln" = log x:xs
+            foldingFunction xs numberString = read numberString:xs
+            
+main = do
+
+  print(solveRPN"55 neg1")
+  print(solveRPN"25 raiz2")
+  print(solveRPN"3 condNumero")
+  print(solveRPN"2 6 4 sumTotal")
+  print(solveRPN"2 10 5 productoTotal")
+  print(solveRPN"2 5 7 + -")
+  print(solveRPN"2 2 *")
+  print(solveRPN"10 5 2 * +")
